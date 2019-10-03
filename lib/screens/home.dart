@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ungshowshim/screens/my_service.dart';
 import 'package:ungshowshim/screens/my_style.dart';
 import 'package:ungshowshim/screens/register.dart';
 
@@ -11,6 +13,23 @@ class _HomeState extends State<Home> {
   // Explicit
 
   // Method
+  @override
+  void initState() {
+    super.initState();
+    checkStatus();
+  }
+
+  Future<void> checkStatus() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+
+    if (firebaseUser != null) {
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
+    }
+  }
 
   Widget showLogo() {
     return Container(
@@ -50,9 +69,9 @@ class _HomeState extends State<Home> {
       onPressed: () {
         print('You Click Sign Up');
 
-        MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context) => Register()); //ภาษาไทยได้ครับ
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(
+            builder: (BuildContext context) => Register()); //ภาษาไทยได้ครับ
         Navigator.of(context).push(materialPageRoute);
-
       },
     );
   }
@@ -82,7 +101,8 @@ class _HomeState extends State<Home> {
             ),
           ),
           child: Center(
-            child: Container(padding: EdgeInsets.all(30.0),
+            child: Container(
+              padding: EdgeInsets.all(30.0),
               color: Color.fromRGBO(255, 255, 255, 0.6),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
